@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { fetchAllCoins } from '../api';
+import Toggle from 'react-switch';
+import { useTheme } from '../ThemeProvider';
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -15,6 +17,8 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
 `;
 
 const CoinsList = styled.ul``;
@@ -40,8 +44,12 @@ const Coin = styled.li`
 const Title = styled.h1`
   font-size: 48px;
   color: ${(props) => props.theme.accentColor};
+  grid-column: 2 / span 1;
 `;
-
+const ThemeTogglebutton = styled(Toggle)`
+  justify-self: end;
+  pointer: cursor;
+`;
 const Loader = styled.span`
   display: block;
   text-align: center;
@@ -70,6 +78,10 @@ function Coins() {
     'allCoins',
     fetchAllCoins
   );
+  const { isDarkMode, onToggleTheme } = useTheme() ?? {
+    isDarkMode: true,
+    onToggleTheme: () => {},
+  };
 
   // useEffect(() => {
   //   (async () => {
@@ -87,6 +99,17 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>코인</Title>
+        <ThemeTogglebutton
+          uncheckedIcon={isDarkMode}
+          checkedIcon={isDarkMode}
+          checked={isDarkMode}
+          onChange={onToggleTheme}
+          activeBoxShadow="0 0 2px 3px #aaa"
+          offHandleColor="#f5f6fa"
+          onHandleColor="#2f3640"
+          onColor="#f5f6fa"
+          offColor="#2f3640"
+        />
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
